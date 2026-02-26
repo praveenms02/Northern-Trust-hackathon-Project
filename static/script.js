@@ -1,3 +1,14 @@
+const API = "http://localhost:5000/api";
+
+// ── Part 1 fills: currentUser, allUsers, login(), logout(), showPage(), loadAllUsers(), lookupReceiver(), updateBalance() ──
+// ── Part 5 fills: showTab(), showToast() ──
+
+// ════════════════════════════════════════════
+// ── PART 2: PAYMENTS — Send Money & Modal ───
+// ════════════════════════════════════════════
+
+let lastPaymentDetails = null; // stored for retry (no PIN)
+let pollInterval       = null;
 // PayFlow — Frontend JS
 const API = "http://localhost:5000/api";
 
@@ -168,6 +179,10 @@ async function initiatePayment() {
   const btn        = document.getElementById("payBtn");
 
   errEl.classList.remove("show");
+
+  if (!receiverId)          { errEl.textContent = "Enter a receiver ID";   errEl.classList.add("show"); return; }
+  if (!amount || amount<=0) { errEl.textContent = "Enter a valid amount";  errEl.classList.add("show"); return; }
+  if (!pin)                 { errEl.textContent = "Enter your UPI PIN";    errEl.classList.add("show"); return; }
   if (!receiverId)          { errEl.textContent = "Enter a receiver ID";  errEl.classList.add("show"); return; }
   if (!amount || amount<=0) { errEl.textContent = "Enter a valid amount"; errEl.classList.add("show"); return; }
   if (!pin)                 { errEl.textContent = "Enter your UPI PIN";   errEl.classList.add("show"); return; }
@@ -182,6 +197,12 @@ async function initiatePayment() {
       body: JSON.stringify({ senderId: currentUser.id, receiverId, amount, currency: "INR", pin }),
     });
     const data = await res.json();
+
+    if (data.success) {
+      lastPaymentDetails = { receiverId, amount };
+      document.getElementById("receiverId").value  = "";
+      document.getElementById("payAmount").value   = "";
+      document.getElementById("payPin").value      = "";
     if (data.success) {
       lastPaymentDetails = { receiverId, amount };
       document.getElementById("receiverId").value = "";
@@ -197,6 +218,7 @@ async function initiatePayment() {
     errEl.textContent = "Connection error. Is the backend running?";
     errEl.classList.add("show");
   }
+
   btn.innerHTML = "Send Payment";
   btn.disabled  = false;
 }
@@ -231,6 +253,12 @@ function showPayModal(paymentId) {
 
 async function pollPayment(paymentId) {
   try {
+    const res  = await fetch(`${API}/payment/${paymentId}`);
+    const data = await res.json();
+    const badge = document.getElementById("modalBadge");
+    badge.textContent = data.status;
+    badge.className   = "badge " + data.status;
+
     const res   = await fetch(`${API}/payment/${paymentId}`);
     const data  = await res.json();
     const badge = document.getElementById("modalBadge");

@@ -1,5 +1,6 @@
 """
 PayFlow — Mini Payment Gateway Simulator
+"""
 Flask + SQLite backend
 """
 """PayFlow — Mini Payment Gateway Simulator"""
@@ -31,6 +32,22 @@ def get_db():
     return conn
 
 def init_db():
+    pass  # Part 5 fills this
+
+# ── Part 1 routes: /api/auth, /api/users ──────────────────────────────────
+
+# ════════════════════════════════════
+# ── PART 2: PAYMENT STATE MACHINE ───
+# ════════════════════════════════════
+def determine_outcome(sender_id, receiver_id, amount):
+    """Rule-based + 15% random failure engine."""
+    conn   = get_db()
+    cursor = conn.cursor()
+
+    if amount <= 0:
+        conn.close(); return False, "INVALID_AMOUNT"
+    if amount > 100000:
+        conn.close(); return False, "AMOUNT_EXCEEDS_LIMIT"
     pass  # Part 5 implements table creation + seed
 
 # ════════════════════════════════════
@@ -180,6 +197,10 @@ def determine_outcome(sender_id, receiver_id, amount):
 
 
 def process_payment_async(payment_id):
+    """
+    Simulates bank delay. Runs in background thread.
+    State machine: CREATED → PROCESSING → SUCCESS | FAILED
+    """
     time.sleep(1)
     conn = get_db()
     now  = datetime.now().isoformat()
@@ -201,12 +222,14 @@ def process_payment_async(payment_id):
     else:
         conn.execute("UPDATE payments SET status='FAILED', failure_reason=?, updated_at=? WHERE payment_id=?",
                      (reason, now, payment_id))
+
     conn.commit()
     conn.close()
 
 
 @app.route("/api/payment/create", methods=["POST"])
 def create_payment():
+    """Create payment record (CREATED), kick off async processing thread."""
     data        = request.get_json()
     sender_id   = data.get("senderId",   "").strip().upper()
     receiver_id = data.get("receiverId", "").strip().upper()
@@ -241,6 +264,9 @@ def create_payment():
     conn.commit()
     conn.close()
 
+    thread = threading.Thread(target=process_payment_async, args=(payment_id,))
+    thread.daemon = True
+    thread.start()
     t = threading.Thread(target=process_payment_async, args=(payment_id,))
     t.daemon = True
     t.start()
@@ -248,6 +274,9 @@ def create_payment():
     return jsonify({"success": True, "paymentId": payment_id,
                     "status": "CREATED", "message": "Payment initiated. Processing..."}), 201
 
+# ── Part 3 routes: /api/payment/<id>, /api/payments/user/<id> ────────────
+# ── Part 4 routes: /api/refund/* ─────────────────────────────────────────
+# ── Part 5 routes: /api/summary ──────────────────────────────────────────
 
 # ══════════════════════════════════════════════════
 # PART 3 — HISTORY & STATUS
