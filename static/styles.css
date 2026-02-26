@@ -1,0 +1,977 @@
+:root {
+  --bg: #0b0f19;
+  --surface: #111827;
+  --border: #1e2a3a;
+  --accent: #3b82f6;
+  --accent2: #06b6d4;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --card: #141d2e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Space Grotesk", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND GRID ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── HEADER ── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(11, 15, 25, 0.8);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+}
+
+.user-badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.btn-logout {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.btn-logout:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* ── PAGES ── */
+.page {
+  display: none;
+}
+.page.active {
+  display: block;
+}
+
+/* ── LOGIN ── */
+#loginPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 0 60px rgba(59, 130, 246, 0.08);
+}
+
+.login-card h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.login-card p {
+  color: var(--muted);
+  margin-bottom: 32px;
+  font-size: 0.9rem;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.field input[type="password"] {
+  font-family: "IBM Plex Mono", monospace;
+  letter-spacing: 0.2em;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.demo-hint {
+  margin-top: 20px;
+  padding: 14px;
+  background: rgba(59, 130, 246, 0.06);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 10px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.demo-hint code {
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--accent2);
+  font-size: 0.85rem;
+}
+
+/* ── MAIN DASHBOARD ── */
+#dashboard {
+  display: none;
+}
+#dashboard.active {
+  display: block;
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 65px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.nav-item:hover {
+  color: var(--text);
+  background: rgba(59, 130, 246, 0.05);
+}
+.nav-item.active {
+  color: var(--accent);
+  background: rgba(59, 130, 246, 0.08);
+  border-left-color: var(--accent);
+}
+
+.nav-icon {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+/* Notification badge on nav items */
+.nav-badge {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--red);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  margin-left: auto;
+}
+
+.sidebar-balance {
+  margin: 20px 16px 0;
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.sidebar-balance .label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.sidebar-balance .amount {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--green);
+  margin-top: 4px;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+/* ── CONTENT AREA ── */
+.content {
+  padding: 32px;
+  overflow-y: auto;
+}
+
+.tab-panel {
+  display: none;
+}
+.tab-panel.active {
+  display: block;
+}
+
+/* ── CARDS ── */
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.page-sub {
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin-bottom: 28px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.stat-card .stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 6px;
+  font-family: "IBM Plex Mono", monospace;
+}
+.stat-card .stat-value.green {
+  color: var(--green);
+}
+.stat-card .stat-value.red {
+  color: var(--red);
+}
+.stat-card .stat-value.blue {
+  color: var(--accent);
+}
+
+/* ── PAYMENT FORM ── */
+.pay-form {
+  max-width: 520px;
+}
+
+.amount-input-wrap {
+  position: relative;
+}
+
+.amount-input-wrap .currency-badge {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  pointer-events: none;
+}
+
+.amount-input-wrap input {
+  padding-left: 52px;
+}
+
+.receiver-card {
+  background: rgba(59, 130, 246, 0.06);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  display: none;
+}
+
+.receiver-card.show {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.receiver-card .av {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.receiver-card .name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.receiver-card .id {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+}
+
+/* ── STATUS BADGE ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge.CREATED {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--yellow);
+}
+.badge.PROCESSING {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+}
+.badge.SUCCESS {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+}
+.badge.FAILED {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--red);
+}
+
+/* Refund-specific status badges */
+.badge.refund-PENDING {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--yellow);
+}
+.badge.refund-ACCEPTED {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+}
+.badge.refund-REJECTED {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--red);
+}
+
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badge.PROCESSING::before {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* ── PAYMENT RESULT MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  width: 400px;
+  text-align: center;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal .icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+.modal h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.modal p {
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin-bottom: 20px;
+}
+.modal .pay-id {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  color: var(--accent2);
+  background: var(--bg);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.modal .status-container {
+  margin: 16px 0;
+}
+
+.modal-btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btn-secondary {
+  padding: 10px 24px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── RETRY BUTTON ── */
+.btn-retry {
+  padding: 10px 24px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid var(--yellow);
+  border-radius: 8px;
+  color: var(--yellow);
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.btn-retry:hover {
+  background: rgba(245, 158, 11, 0.2);
+}
+
+/* ── HISTORY TABLE ── */
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 12px 14px;
+  font-size: 0.875rem;
+  border-bottom: 1px solid rgba(30, 42, 58, 0.5);
+  vertical-align: middle;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+tr:hover td {
+  background: rgba(59, 130, 246, 0.03);
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.type-badge.SENT {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--red);
+}
+.type-badge.RECEIVED {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--green);
+}
+
+/* ── REFUND BUTTON in History ── */
+.btn-refund {
+  padding: 5px 12px;
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 6px;
+  color: var(--accent2);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-refund:hover {
+  background: rgba(6, 182, 212, 0.18);
+  border-color: var(--accent2);
+}
+
+/* Live countdown timer inside refund button */
+.refund-timer {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
+/* Shown once the 10-min window has passed */
+.refund-expired {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: default;
+  white-space: nowrap;
+}
+
+/* Terminal refund state labels (accepted / rejected / pending) */
+.refund-done {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: default;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.refund-accepted {
+  color: var(--green);
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.25);
+}
+.refund-rejected {
+  color: var(--red);
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+.refund-pending {
+  color: var(--yellow);
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+/* ── STATUS CHECKER ── */
+.checker-wrap {
+  max-width: 500px;
+}
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+.input-row input {
+  flex: 1;
+}
+.input-row button {
+  white-space: nowrap;
+  padding: 12px 20px;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.input-row button:hover {
+  opacity: 0.85;
+}
+
+.status-result {
+  margin-top: 20px;
+}
+
+.status-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.status-row:last-child {
+  border-bottom: none;
+}
+.status-row .key {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.status-row .val {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.mono {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+/* ── FAILURE BREAKDOWN ── */
+.bar-wrap {
+  margin: 8px 0;
+}
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+.bar-label .key {
+  color: var(--muted);
+}
+.bar-track {
+  background: var(--bg);
+  border-radius: 100px;
+  height: 8px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--red), var(--yellow));
+  transition: width 0.8s ease;
+}
+
+/* ── REFUND MODAL ── */
+.refund-modal-info {
+  text-align: left;
+  margin-bottom: 20px;
+}
+.refund-modal-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+.refund-modal-row:last-child {
+  border-bottom: none;
+}
+.refund-modal-row .key {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* ── REFUND TAB ── */
+.refund-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.refund-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.refund-card-info {
+  flex: 1;
+  min-width: 200px;
+}
+.refund-card-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(30, 42, 58, 0.5);
+  font-size: 0.85rem;
+}
+.refund-card-row:last-child {
+  border-bottom: none;
+}
+.refund-card-row .key {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.refund-actions {
+  min-width: 200px;
+}
+
+.btn-accept {
+  padding: 9px 18px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  color: var(--green);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-accept:hover {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.btn-reject {
+  padding: 9px 18px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  color: var(--red);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-reject:hover {
+  background: rgba(239, 68, 68, 0.18);
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 0.875rem;
+  z-index: 9999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 320px;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+.toast.error {
+  border-color: var(--red);
+  color: var(--red);
+}
+.toast.success {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.error-msg {
+  color: var(--red);
+  font-size: 0.8rem;
+  margin-top: 8px;
+  display: none;
+}
+.error-msg.show {
+  display: block;
+}
+
+/* ── LOADING SPINNER ── */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .refund-card {
+    flex-direction: column;
+  }
+}
