@@ -12,6 +12,7 @@
 <!-- ══════════════════════════════════════════
      PART 1 — LOGIN PAGE
 ══════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════ LOGIN PAGE ══════════════════════════════════════════ -->
 <div id="loginPage" class="page active">
   <div class="login-card">
     <div class="logo" style="margin-bottom:24px;font-size:1.6rem">⚡ PayFlow</div>
@@ -33,6 +34,7 @@
 <!-- ══════════════════════════════════════════
      PART 1 — DASHBOARD SHELL (header + sidebar)
 ══════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════ DASHBOARD ══════════════════════════════════════════ -->
 <div id="dashboard" class="page">
   <header>
     <div class="logo">⚡ PayFlow</div>
@@ -41,6 +43,7 @@
         <span class="dot"></span>
         <span id="headerUserName">—</span>
       </div>
+      <div class="user-badge"><span class="dot"></span><span id="headerUserName">—</span></div>
       <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
   </header>
@@ -70,12 +73,190 @@
       <!-- PART 4: Refunds tab -->
       <!-- PART 4: Refund request modal -->
       <!-- PART 5: Analytics tab -->
+    <main class="content">
+
+      <!-- ── SEND MONEY TAB ── -->
+      <div class="tab-panel active" id="tab-pay">
+        <div class="page-title">Send Money</div>
+        <div class="page-sub">Transfer funds instantly to any registered user</div>
+        <div class="card pay-form">
+          <div class="field">
+            <label>Receiver User ID</label>
+            <input type="text" id="receiverId" placeholder="e.g. USER002" oninput="lookupReceiver()" autocomplete="off"/>
+          </div>
+          <div class="receiver-card" id="receiverCard">
+            <div class="av" id="receiverAv">?</div>
+            <div><div class="name" id="receiverName">—</div><div class="id" id="receiverIdLabel">—</div></div>
+          </div>
+          <div class="field">
+            <label>Amount</label>
+            <div class="amount-input-wrap">
+              <span class="currency-badge">INR ₹</span>
+              <input type="number" id="payAmount" placeholder="0.00" min="1"/>
+            </div>
+          </div>
+          <div class="field">
+            <label>Confirm UPI PIN</label>
+            <input type="password" id="payPin" placeholder="Enter your PIN to authorize" maxlength="6"/>
+          </div>
+          <p id="payError" class="error-msg"></p>
+          <button class="btn-primary" onclick="initiatePayment()" id="payBtn">Send Payment</button>
+        </div>
+      </div>
+
+      <!-- ── TRANSACTION HISTORY TAB ── -->
+      <div class="tab-panel" id="tab-history">
+        <div class="page-title">Transaction History</div>
+        <div class="page-sub">All payments you have sent or received. You can request a refund on successful sent payments.</div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Payment ID</th><th>Type</th><th>Party</th><th>Amount</th><th>Status</th><th>Time</th><th>Action</th></tr>
+              </thead>
+              <tbody id="historyBody">
+                <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CHECK PAYMENT STATUS TAB ── -->
+      <div class="tab-panel" id="tab-checker">
+        <div class="page-title">Check Payment Status</div>
+        <div class="page-sub">Look up any payment by its ID</div>
+        <div class="checker-wrap">
+          <div class="field">
+            <label>Payment ID</label>
+            <div class="input-row">
+              <input type="text" id="checkPayId" placeholder="e.g. PAY3F8A1B2C3D"/>
+              <button onclick="checkStatus()">Check Status</button>
+            </div>
+          </div>
+          <div class="status-result" id="statusResult" style="display:none">
+            <div class="status-card" id="statusCard"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ANALYTICS TAB ── -->
+      <div class="tab-panel" id="tab-analytics">
+        <div class="page-title">Analytics</div>
+        <div class="page-sub">Global transaction summary and insights</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-label">Total Payments</div><div class="stat-value blue"  id="statTotal">—</div></div>
+          <div class="stat-card"><div class="stat-label">Successful</div>    <div class="stat-value green" id="statSuccess">—</div></div>
+          <div class="stat-card"><div class="stat-label">Failed</div>        <div class="stat-value red"   id="statFailed">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total Volume</div>  <div class="stat-value" id="statVolume" style="color:var(--accent2)">—</div></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:20px;font-size:1rem">Failure Reason Breakdown</h3>
+          <div id="failureBreakdown"><p style="color:var(--muted);font-size:0.875rem">No failure data yet.</p></div>
+        </div>
+      </div>
+
+      <!-- ── REFUNDS TAB ── -->
+      <div class="tab-panel" id="tab-refunds">
+        <div class="page-title">Refunds</div>
+        <div class="page-sub">Manage refund requests — approve incoming or track ones you've sent</div>
+        <div class="card">
+          <div class="refund-section-title"><span>⏳</span> Pending Approval — Refund Requests for You</div>
+          <div id="pendingRefundsContainer"><p style="color:var(--muted);font-size:0.875rem">Loading...</p></div>
+        </div>
+        <div class="card">
+          <div class="refund-section-title"><span>📤</span> My Refund Requests</div>
+          <div id="myRefundsContainer"><p style="color:var(--muted);font-size:0.875rem">Loading...</p></div>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
 
 <!-- PART 5: Toast notification -->
 <!-- PART 5: Analytics tab -->
+<!-- ══════════════════════════════════════════ PAYMENT MODAL ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="icon" id="modalIcon">⏳</div>
+    <h3 id="modalTitle">Payment Initiated</h3>
+    <p  id="modalMsg">Your payment is being processed...</p>
+    <div class="pay-id" id="modalPayId"></div>
+    <div class="status-container"><span class="badge CREATED" id="modalBadge">CREATED</span></div>
+    <div id="modalPoll" style="color:var(--muted);font-size:0.8rem;margin-bottom:16px">Waiting for bank response...</div>
+    <div class="modal-btn-row">
+      <button class="btn-secondary" onclick="closeModal()"   id="modalCloseBtn" style="display:none">Done</button>
+      <button class="btn-retry"     onclick="retryPayment()" id="modalRetryBtn" style="display:none">🔄 Retry Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ REFUND MODAL ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="refundModal">
+  <div class="modal">
+    <div class="icon">↩</div>
+    <h3>Request Refund</h3>
+    <p>The receiver will need to approve this before money is returned to you.</p>
+    <div class="refund-modal-info">
+      <div class="refund-modal-row"><span class="key">Payment ID</span>      <span class="mono" style="font-size:0.8rem;color:var(--accent2)" id="refundModalPayId">—</span></div>
+      <div class="refund-modal-row"><span class="key">Amount</span>          <span style="font-weight:700;color:var(--yellow)" id="refundModalAmount">—</span></div>
+      <div class="refund-modal-row"><span class="key">Requesting from</span> <span id="refundModalReceiver">—</span></div>
+    </div>
+    <div class="field" style="text-align:left">
+      <label>Confirm with your UPI PIN</label>
+      <input type="password" id="refundPinInput" placeholder="••••" maxlength="6"/>
+    </div>
+    <p id="refundError" class="error-msg"></p>
+    <div class="modal-btn-row">
+      <button class="btn-secondary" onclick="closeRefundModal()">Cancel</button>
+      <button class="btn-primary"   onclick="submitRefundRequest()" id="refundSubmitBtn" style="width:auto;padding:10px 24px">Send Refund Request</button>
+<!-- PART 1: Login page + Dashboard shell -->
+<!-- PART 2: Send Money tab + Payment modal -->
+
+
+<div class="tab-panel" id="tab-history">
+  <div class="page-title">Transaction History</div>
+  <div class="page-sub">All payments you have sent or received. Request a refund on eligible sent payments.</div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Payment ID</th><th>Type</th><th>Party</th>
+            <th>Amount</th><th>Status</th><th>Time</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+          <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px;">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PART 3 — CHECK PAYMENT STATUS TAB
+══════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-checker">
+  <div class="page-title">Check Payment Status</div>
+  <div class="page-sub">Look up any payment by its ID</div>
+  <div class="checker-wrap">
+    <div class="field">
+      <label>Payment ID</label>
+      <div class="input-row">
+        <input type="text" id="checkPayId" placeholder="e.g. PAY3F8A1B2C3D"/>
+        <button onclick="checkStatus()">Check Status</button>
+      </div>
+    </div>
+    <div class="status-result" id="statusResult" style="display:none">
+      <div class="status-card" id="statusCard"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
