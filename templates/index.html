@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PayFlow — Payment Gateway</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     PART 1 — LOGIN PAGE
+══════════════════════════════════════════ -->
+<div id="loginPage" class="page active">
+  <div class="login-card">
+    <div class="logo" style="margin-bottom:24px;font-size:1.6rem">⚡ PayFlow</div>
+    <h2>Welcome Back</h2>
+    <p>Enter your User ID and UPI PIN to continue</p>
+    <div class="field">
+      <label>User ID</label>
+      <input type="text" id="loginUserId" placeholder="e.g. USER001" autocomplete="off"/>
+    </div>
+    <div class="field">
+      <label>UPI PIN</label>
+      <input type="password" id="loginPin" placeholder="••••" maxlength="6"/>
+    </div>
+    <p id="loginError" class="error-msg"></p>
+    <button class="btn-primary" onclick="login()" id="loginBtn">Login & Verify</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PART 1 — DASHBOARD SHELL (header + sidebar)
+══════════════════════════════════════════ -->
+<div id="dashboard" class="page">
+  <header>
+    <div class="logo">⚡ PayFlow</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="user-badge">
+        <span class="dot"></span>
+        <span id="headerUserName">—</span>
+      </div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <!-- Sidebar (Part 1 owns nav structure; other parts add nav-items via their HTML blocks) -->
+    <aside class="sidebar">
+      <div class="nav-item active" onclick="showTab('pay')"       id="nav-pay">      <span class="nav-icon">💸</span> Send Money</div>
+      <div class="nav-item"        onclick="showTab('history')"   id="nav-history">  <span class="nav-icon">📋</span> Transaction History</div>
+      <div class="nav-item"        onclick="showTab('checker')"   id="nav-checker">  <span class="nav-icon">🔍</span> Check Payment</div>
+      <div class="nav-item"        onclick="showTab('analytics')" id="nav-analytics"><span class="nav-icon">📊</span> Analytics</div>
+      <div class="nav-item"        onclick="showTab('refunds')"   id="nav-refunds">  <span class="nav-icon">↩</span> Refunds
+        <span class="nav-badge" id="refundNavBadge">0</span>
+      </div>
+      <div class="sidebar-balance">
+        <div class="label">Your Balance</div>
+        <div class="amount" id="sidebarBalance">₹ —</div>
+      </div>
+    </aside>
+
+    <!-- Main content area — other parts inject their tab panels here -->
+    <main class="content">
+      <!-- PART 2: Send Money tab -->
+      <!-- PART 2: Payment result modal -->
+      <!-- PART 3: Transaction History tab -->
+      <!-- PART 3: Check Payment tab -->
+      <!-- PART 4: Refunds tab -->
+      <!-- PART 4: Refund request modal -->
+      <!-- PART 5: Analytics tab -->
+    </main>
+  </div>
+</div>
+
+<!-- PART 5: Toast notification -->
+<!-- PART 5: Analytics tab -->
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
