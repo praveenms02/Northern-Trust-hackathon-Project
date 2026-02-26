@@ -17,6 +17,9 @@ DB_PATH = "payments.db"
 def home():
     return render_template("index.html")
 
+# ════════════════════════════════════
+# ── PART 5: get_db / init_db ────────  (skeleton — Part 5 fills this)
+# ════════════════════════════════════
 
 # ══════════════════════════════════════════════════
 # PART 5 — DB INFRASTRUCTURE
@@ -27,6 +30,15 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+def init_db():
+    pass  # Part 5 implements table creation + seed
+
+# ════════════════════════════════════
+# ── PART 1: AUTH ROUTES ─────────────
+# ════════════════════════════════════
+@app.route("/api/auth", methods=["POST"])
+def authenticate():
+    """Verify user ID + PIN, return name & balance."""
 
 def init_db():
     conn   = get_db()
@@ -124,6 +136,9 @@ def authenticate():
     return jsonify({"success": True, "userId": user["id"],
                     "name": user["name"], "balance": user["balance"]})
 
+@app.route("/api/users", methods=["GET"])
+def list_users():
+    """Return all users — id + name only (no PINs)."""
 
 @app.route("/api/users", methods=["GET"])
 def list_users():
@@ -134,6 +149,7 @@ def list_users():
     conn.close()
     return jsonify({"success": True, "users": users})
 
+# ── stubs filled by other parts ──────────────────────
 
 # ══════════════════════════════════════════════════
 # PART 2 — PAYMENT CORE
@@ -529,4 +545,5 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     init_db()
     print("\n🚀 PayFlow running at http://localhost:5000")
+    print("📋 Demo: USER001/1234  USER002/5678  USER003/9999")
     app.run(debug=True, port=5000)

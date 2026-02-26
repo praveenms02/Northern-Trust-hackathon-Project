@@ -9,6 +9,9 @@
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════
+     PART 1 — LOGIN PAGE
+══════════════════════════════════════════ -->
 <!-- ══════════════════════════════════════════ LOGIN PAGE ══════════════════════════════════════════ -->
 <div id="loginPage" class="page active">
   <div class="login-card">
@@ -28,17 +31,25 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     PART 1 — DASHBOARD SHELL (header + sidebar)
+══════════════════════════════════════════ -->
 <!-- ══════════════════════════════════════════ DASHBOARD ══════════════════════════════════════════ -->
 <div id="dashboard" class="page">
   <header>
     <div class="logo">⚡ PayFlow</div>
     <div style="display:flex;align-items:center;gap:12px">
+      <div class="user-badge">
+        <span class="dot"></span>
+        <span id="headerUserName">—</span>
+      </div>
       <div class="user-badge"><span class="dot"></span><span id="headerUserName">—</span></div>
       <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
   </header>
 
   <div class="main-layout">
+    <!-- Sidebar (Part 1 owns nav structure; other parts add nav-items via their HTML blocks) -->
     <aside class="sidebar">
       <div class="nav-item active" onclick="showTab('pay')"       id="nav-pay">      <span class="nav-icon">💸</span> Send Money</div>
       <div class="nav-item"        onclick="showTab('history')"   id="nav-history">  <span class="nav-icon">📋</span> Transaction History</div>
@@ -53,6 +64,15 @@
       </div>
     </aside>
 
+    <!-- Main content area — other parts inject their tab panels here -->
+    <main class="content">
+      <!-- PART 2: Send Money tab -->
+      <!-- PART 2: Payment result modal -->
+      <!-- PART 3: Transaction History tab -->
+      <!-- PART 3: Check Payment tab -->
+      <!-- PART 4: Refunds tab -->
+      <!-- PART 4: Refund request modal -->
+      <!-- PART 5: Analytics tab -->
     <main class="content">
 
       <!-- ── SEND MONEY TAB ── -->
@@ -154,6 +174,8 @@
   </div>
 </div>
 
+<!-- PART 5: Toast notification -->
+<!-- PART 5: Analytics tab -->
 <!-- ══════════════════════════════════════════ PAYMENT MODAL ══════════════════════════════════════════ -->
 <div class="modal-overlay" id="payModal">
   <div class="modal">
