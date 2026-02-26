@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PayFlow — Payment Gateway</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+</head>
+<body>
+
+<!-- PART 1: Login page + dashboard shell (see feature/part1-auth) -->
+
+<!-- ══════════════════════════════════════════
+     PART 2 — SEND MONEY TAB
+══════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-pay">
+  <div class="page-title">Send Money</div>
+  <div class="page-sub">Transfer funds instantly to any registered user</div>
+  <div class="card pay-form">
+    <div class="field">
+      <label>Receiver User ID</label>
+      <input type="text" id="receiverId" placeholder="e.g. USER002" oninput="lookupReceiver()" autocomplete="off"/>
+    </div>
+    <div class="receiver-card" id="receiverCard">
+      <div class="av" id="receiverAv">?</div>
+      <div>
+        <div class="name" id="receiverName">—</div>
+        <div class="id"   id="receiverIdLabel">—</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Amount</label>
+      <div class="amount-input-wrap">
+        <span class="currency-badge">INR ₹</span>
+        <input type="number" id="payAmount" placeholder="0.00" min="1"/>
+      </div>
+    </div>
+    <div class="field">
+      <label>Confirm UPI PIN</label>
+      <input type="password" id="payPin" placeholder="Enter your PIN to authorize" maxlength="6"/>
+    </div>
+    <p id="payError" class="error-msg"></p>
+    <button class="btn-primary" onclick="initiatePayment()" id="payBtn">Send Payment</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PART 2 — PAYMENT RESULT MODAL
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="icon" id="modalIcon">⏳</div>
+    <h3 id="modalTitle">Payment Initiated</h3>
+    <p  id="modalMsg">Your payment is being processed...</p>
+    <div class="pay-id" id="modalPayId"></div>
+    <div class="status-container">
+      <span class="badge CREATED" id="modalBadge">CREATED</span>
+    </div>
+    <div id="modalPoll" style="color:var(--muted);font-size:0.8rem;margin-bottom:16px">Waiting for bank response...</div>
+    <div class="modal-btn-row">
+      <button class="btn-secondary" onclick="closeModal()"    id="modalCloseBtn" style="display:none">Done</button>
+      <button class="btn-retry"     onclick="retryPayment()"  id="modalRetryBtn" style="display:none">🔄 Retry Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- PART 3: History + Checker tabs (see feature/part3-history) -->
+<!-- PART 4: Refunds tab + Refund modal (see feature/part4-refunds) -->
+<!-- PART 5: Analytics tab + Toast (see feature/part5-analytics) -->
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
