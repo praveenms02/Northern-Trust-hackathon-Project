@@ -2,12 +2,14 @@
 PayFlow — Mini Payment Gateway Simulator
 Flask + SQLite backend
 """
+"""PayFlow — Mini Payment Gateway Simulator"""
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import sqlite3, uuid, random, time, threading
 from datetime import datetime
 
 app     = Flask(__name__)
+app  = Flask(__name__)
 CORS(app)
 DB_PATH = "payments.db"
 
@@ -237,6 +239,16 @@ def create_payment():
 
 @app.route("/api/payment/<payment_id>", methods=["GET"])
 def get_payment_status(payment_id):
+def init_db():
+    pass  # Part 5 fills this
+
+# ════════════════════════════════════
+# ── PART 3: HISTORY & STATUS ────────
+# ════════════════════════════════════
+
+@app.route("/api/payment/<payment_id>", methods=["GET"])
+def get_payment_status(payment_id):
+    """Fetch a single payment by ID. Also used by Part 2 polling."""
     conn   = get_db()
     cursor = conn.cursor()
     cursor.execute("""
@@ -254,6 +266,7 @@ def get_payment_status(payment_id):
 
     return jsonify({
         "success": True,
+        "success":       True,
         "paymentId":     payment["payment_id"],
         "senderId":      payment["sender_id"],
         "senderName":    payment["sender_name"],
@@ -271,6 +284,7 @@ def get_payment_status(payment_id):
 
 @app.route("/api/payments/user/<user_id>", methods=["GET"])
 def get_user_payments(user_id):
+    """All payments sent or received by a user, newest first."""
     conn   = get_db()
     cursor = conn.cursor()
     cursor.execute("""
@@ -493,4 +507,26 @@ if __name__ == "__main__":
     print("\n🚀 PayFlow running at http://localhost:5000")
     print("📋 Demo: USER001/1234  USER002/5678  USER003/9999  USER004/1111  USER005/0000")
     print("─" * 50)
+    payments = []
+    for p in rows:
+        payments.append({
+            "paymentId":     p["payment_id"],
+            "senderId":      p["sender_id"],
+            "senderName":    p["sender_name"],
+            "receiverId":    p["receiver_id"],
+            "receiverName":  p["receiver_name"],
+            "amount":        p["amount"],
+            "currency":      p["currency"],
+            "status":        p["status"],
+            "failureReason": p["failure_reason"],
+            "refundStatus":  p["refund_status"],
+            "createdAt":     p["created_at"],
+            "type":          "SENT" if p["sender_id"] == user_id.upper() else "RECEIVED"
+        })
+
+    return jsonify({"success": True, "payments": payments})
+
+if __name__ == "__main__":
+    init_db()
+    print("\n🚀 PayFlow running at http://localhost:5000")
     app.run(debug=True, port=5000)
